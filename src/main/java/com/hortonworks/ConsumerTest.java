@@ -16,6 +16,7 @@
 package com.hortonworks;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,37 +34,24 @@ public class ConsumerTest implements Runnable {
 
     private static final Logger LOG = Logger.getLogger(ConsumerTest.class.getName());
 
-    /**
-     * @return the map
-     */
-    public static ConcurrentHashMap getMap() {
-        return map;
-    }
 
-    /**
-     * @param aMap the map to set
-     */
-    public static void setMap(ConcurrentHashMap aMap) {
-        map = aMap;
-    }
     private KafkaStream m_stream;
     private int m_threadNumber;
     private static KafkaToHBaseConfig config;
-    private static ConcurrentHashMap map;
+    private Map _map;
 
     ConsumerTest() {
         try {
             config = Util.getKafkaToHiveConfig("kafka.json");
-            map = new ConcurrentHashMap();
-            map.put("first", "");
         } catch (IOException ex) {
             Logger.getLogger(ConsumerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public ConsumerTest(KafkaStream a_stream, int a_threadNumber) {
+    public ConsumerTest(KafkaStream a_stream, int a_threadNumber, Map map) {
         m_threadNumber = a_threadNumber;
         m_stream = a_stream;
+        _map = map;
     }
 
     @Override
@@ -74,7 +62,7 @@ public class ConsumerTest implements Runnable {
             
             try {
                 Object[] fields = createValues(new String(it.next().message()));
-                getMap().put(fields[0], fields);
+                _map.put(fields[0], fields);
             } catch (IOException | ClassNotFoundException ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }

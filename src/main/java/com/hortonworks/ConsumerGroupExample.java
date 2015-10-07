@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -56,7 +57,8 @@ public class ConsumerGroupExample {
     private static final byte[] CF_DEFAULT = Bytes.toBytes("cf");
     private static final byte[] CF_FAMILY = Bytes.toBytes("message");
     private static final Logger LOG = Logger.getLogger(ConsumerGroupExample.class.getName());
-
+    private static Map map = new ConcurrentHashMap();
+    
     public ConsumerGroupExample(String a_zookeeper, String a_groupId, String a_topic) {
         consumer = kafka.consumer.Consumer.createJavaConsumerConnector(
                 createConsumerConfig(a_zookeeper, a_groupId));
@@ -93,7 +95,7 @@ public class ConsumerGroupExample {
         //
         int threadNumber = 0;
         for (final KafkaStream stream : streams) {
-            executor.submit(new ConsumerTest(stream, threadNumber));
+            executor.submit(new ConsumerTest(stream, threadNumber,map));
             threadNumber++;
         }
     }
@@ -130,7 +132,6 @@ public class ConsumerGroupExample {
         hbaseConfig.set("zookeeper.znode.parent", "/hbase-unsecure");
 
         long start = System.currentTimeMillis();
-        Map map = ConsumerTest.getMap();
         int count = 0;
         List<String> messages = new ArrayList<>();
         for(Object key : map.keySet()) {
@@ -151,7 +152,14 @@ public class ConsumerGroupExample {
         }
         example.shutdown();
     }
+    /**
+     * @return the map
+     */
 
+
+    /**
+     * @param aMap the map to set
+     */
     public static void write(Configuration config, List<String> messages) {
 
         TableName tableName = TableName.valueOf("api");
