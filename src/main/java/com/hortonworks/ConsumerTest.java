@@ -54,6 +54,8 @@ public class ConsumerTest implements Runnable {
     ConsumerTest() {
         try {
             config = Util.getKafkaToHiveConfig("kafka.json");
+            map = new ConcurrentHashMap();
+            map.put("first", "");
         } catch (IOException ex) {
             Logger.getLogger(ConsumerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
