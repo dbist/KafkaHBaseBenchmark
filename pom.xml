@@ -44,7 +44,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.hortonworks.KafkaHBaseBenchmark</mainClass>
+                            <mainClass>com.hortonworks.ConsumerGroupExample</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
