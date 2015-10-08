@@ -1,0 +1,63 @@
+{
+  "id" : "testId",
+  "kafkaConfig": {
+    "sourceTopic": "clicks_new10",
+    "kafkaSpoutZkHosts": "jetslave5.jetnetname.artem.com:2181,jetmaster1.jetnetname.artem.com:2181,jetmaster2.jetnetname.artem.com:2181",
+    "kafkaSpoutZkRoot": "/kafka_storm",
+    "kafkaSpoutConsumerClientId": "StormSpoutClientId",
+    "kafkaSpoutConsumerGroup": "StormSpoutConsumerGroup",
+    "kafkaBrokerList": "jetmaster1.jetnetname.artem.com:6667,jetmaster2.jetnetname.artem.com:6667,jetslave4.jetnetname.artem.com:6667,jetslave5.jetnetname.artem.com:6667,jetslave6.jetnetname.artem.com:6667",
+    "useStartOffsetTimeIfOffsetOutOfRange": true
+  },
+  "mappingConfig": {
+    "fields": [
+      {
+        "name": "click_key"
+      },
+      {
+        "name": "client_id"
+      },
+      {
+        "name": "ordinal"
+      },
+      {
+        "name": "datetime"
+      },
+      {
+        "name": "user_agent"
+      },
+      {
+        "name": "url"
+      },
+      {
+        "name": "params"
+      },
+      {
+        "name": "tags"
+      },
+      {
+        "name": "dec"
+      },
+      {
+        "name": "json_example"
+      },
+      {
+        "name": "list_example"
+      },
+      {
+        "name": "map_example"
+      },
+      {
+        "name": "struct_example"
+      },
+      {
+        "name": "source_message"
+      }
+    ],
+    "partitionFields": [
+      {
+        "name": "partition_save_date"
+      }
+    ]
+  }
+}
