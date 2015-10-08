@@ -188,7 +188,7 @@ public class ConsumerGroupExample {
             Put put;
 
             for (String message : messages) {
-
+                LOG.info(message);
                 put = new Put(Bytes.toBytes(message));
                 put.addColumn(CF_DEFAULT, CF_FAMILY, Bytes.toBytes(message));
                 puts.add(put);
