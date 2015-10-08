@@ -123,6 +123,7 @@ public class ConsumerGroupExample {
         int threads = 1;
 
         ConsumerGroupExample example = new ConsumerGroupExample(zooKeeper, groupId, topic);
+        LOG.info("Starting Consumer");
         example.run(threads);
 
         Configuration hbaseConfig = HBaseConfiguration.create();
@@ -142,6 +143,7 @@ public class ConsumerGroupExample {
                 messages.clear();
                 LOG.info(String.format("Currently processed %d", count));
             }
+            count++;
         } 
         write(hbaseConfig, messages);
 
@@ -150,6 +152,10 @@ public class ConsumerGroupExample {
         } catch (InterruptedException ie) {
 
         }
+        
+        long end = System.currentTimeMillis();
+        LOG.info(String.format("Ellapsed: %d", (end - start)/1000));
+        
         example.shutdown();
     }
     /**
