@@ -16,9 +16,10 @@
 package com.hortonworks;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 
@@ -30,33 +31,41 @@ public class ConsumerTest extends JsonUtils implements Runnable {
 
     private static final Logger LOG = Logger.getLogger(ConsumerTest.class.getName());
 
-
     private KafkaStream m_stream;
     private int m_threadNumber;
-    private Map _map;
 
-    ConsumerTest() {
-    }
+	private Notifier notifier;
+	private LinkedBlockingQueue m_queue;
 
-    public ConsumerTest(KafkaStream a_stream, int a_threadNumber, Map map) {
+
+    public ConsumerTest(KafkaStream a_stream, int a_threadNumber, LinkedBlockingQueue<Object[]> queue, Notifier notifier) {
         m_threadNumber = a_threadNumber;
         m_stream = a_stream;
-        _map = map;
+        m_queue = queue;
+        this.notifier =notifier;
     }
-
+    
     @Override
     public void run() {
-
         ConsumerIterator<byte[], byte[]> it = m_stream.iterator();
-        while (it.hasNext()) {
-            
+        int count =0;
+        while (it.hasNext()){
+            byte[] message = it.next().message();
+//			System.out.println("Thread " + m_threadNumber + ": " + new String(message));
             try {
-                Object[] fields = createValues(new String(it.next().message()));
-                _map.put(fields[0], fields);
+                Object[] fields = createValues(new String(message));
+                m_queue.add( fields);
             } catch (IOException | ClassNotFoundException ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
+
+        		if(count%10000==0){
+        			notifier.flushMsgs();
+        		}
+        		count++;
         }
+        System.out.println("Shutting down Thread: " + m_threadNumber);
+        notifier.shutdown();
     }
 
 }

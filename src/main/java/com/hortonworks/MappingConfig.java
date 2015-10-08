@@ -1,12 +1,10 @@
 package com.hortonworks;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * Created by christoph on 8/24/15.
